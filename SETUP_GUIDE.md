@@ -1,19 +1,19 @@
-# Setup Guide (Fresh Machine)
+# Initial Setup Instructions (New Installation)
 
-This guide assumes you have a completely fresh machine with no PHP, Node.js, or Composer installed. We will use **Docker** to handle all dependencies.
+This documentation is designed for systems without pre-installed PHP, Node.js, or Composer. All dependencies will be managed through **Docker containers**.
 
-## Prerequisites
+## Required Software
 
-1.  **Install Docker Desktop**:
-    - Download and install Docker Desktop for your OS (Mac/Windows/Linux).
-    - Ensure Docker is running.
+1.  **Docker Desktop Installation**:
+    - Obtain and install Docker Desktop compatible with your operating system (macOS/Windows/Linux).
+    - Verify Docker is active and running before proceeding.
 
-## Installation Steps
+## Step-by-Step Installation
 
-### 1. Install PHP Dependencies (via Docker)
-Since you don't have PHP/Composer installed locally, we use a temporary Docker container to install the project dependencies.
+### Step 1: Install Backend Dependencies (Using Docker)
+If PHP and Composer are not available on your local machine, utilize a temporary Docker container to fetch project dependencies.
 
-Run this command in your terminal at the project root:
+Execute this command from the project's root directory:
 
 ```bash
 docker run --rm \
@@ -24,59 +24,59 @@ docker run --rm \
     composer install --ignore-platform-reqs
 ```
 
-*This command may take a few minutes as it downloads the necessary images and dependencies.*
+*Please allow several minutes for this process as it downloads Docker images and required packages.*
 
-### 2. Configure Environment
-Create the environment file from the example:
+### Step 2: Environment File Configuration
+Generate the environment configuration file from the template:
 
 ```bash
 cp .env.example .env
 ```
 
-### 3. Start the Application (Sail)
-Now that dependencies are installed (including Laravel Sail), you can start the application containers.
+### Step 3: Launch Application Containers (Sail)
+With all dependencies installed (including Laravel Sail), initialize the application's Docker containers.
 
 ```bash
 ./vendor/bin/sail up -d
 ```
 
-*Note: The first start will take some time to build the Docker images.*
+*Initial container build may require additional time to complete.*
 
-### 4. Application Setup
-Run the following commands using Sail to generate keys and setup the database:
+### Step 4: Application Initialization
+Execute these Sail commands to create the application encryption key and prepare the database:
 
 ```bash
-# Generate Application Key
+# Create Application Encryption Key
 ./vendor/bin/sail artisan key:generate
 
-# Run Database Migrations and Seed Data
+# Execute Database Migrations and Populate Seed Data
 ./vendor/bin/sail artisan migrate --seed
 ```
 
-### 5. Install Frontend Dependencies
-Install and build the frontend assets (Node/Vue):
+### Step 5: Frontend Package Installation
+Download and compile frontend dependencies (Node.js/Vue.js):
 
 ```bash
 ./vendor/bin/sail npm install
 ./vendor/bin/sail npm run dev
 ```
 
-### 6. Start Queue Worker
-The application requires a queue worker for monitoring websites:
+### Step 6: Initialize Background Job Processor
+The system needs a queue worker running to process website status monitoring tasks:
 
 ```bash
 ./vendor/bin/sail artisan queue:work
 ```
 
-## Accessing the App
+## Application Access Points
 
-- **Web Interface**: [http://localhost](http://localhost)
-- **Mailpit (Emails)**: [http://localhost:8025](http://localhost:8025) (Assuming default port)
+- **Main Dashboard**: [http://localhost](http://localhost)
+- **Email Testing Interface**: [http://localhost:8025](http://localhost:8025) (Default Mailpit port)
 
-## Troubleshooting
+## Common Issues & Solutions
 
-- **Alias**: To make commands shorter, you can configure a shell alias:
+- **Command Shortcuts**: Create a shell alias to simplify Sail commands:
     ```bash
     alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
     ```
-    Then you can run `sail up`, `sail artisan ...` instead of `./vendor/bin/sail ...`.
+    After setting this alias, you can use `sail up` and `sail artisan ...` instead of the full path.
